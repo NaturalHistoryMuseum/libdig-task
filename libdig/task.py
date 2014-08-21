@@ -40,6 +40,7 @@ class LibraryDigitisationTask(luigi.Task):
             'license_id': u'other-open',
             'resources': [],
             'dataset_type': 'Library and archives',
+            'owner_org': config.get('ckan', 'owner_org')
         }
 
     def __init__(self, *args, **kwargs):
@@ -144,7 +145,7 @@ class LibraryDigitisationTask(luigi.Task):
             package = self.call_action('package_create', self.package)
 
         # Target dir for files, with package ID appended
-        dir = os.path.join(self.target_dir, package['id'])
+        dir = os.path.join(self.target_dir, package['name'])
 
         # Create if it doesn't exist
         if not os.path.exists(dir):
@@ -193,8 +194,8 @@ class LibraryDigitisationTask(luigi.Task):
                         im.thumbnail(self.image_size, Image.ANTIALIAS)
                         im.save(image, "JPEG")
 
-                record['thumbnail'] = '/' + os.path.join(package['id'], thumbnail_name)
-                record['image'] = '/' + os.path.join(package['id'], f)
+                record['thumbnail'] = '/' + os.path.join(package['name'], thumbnail_name)
+                record['image'] = '/' + os.path.join(package['name'], f)
 
                 records.append(record)
 
